@@ -23,6 +23,7 @@ ItemStack::ItemStack(const Item& inputItem, int s)
 
 //------------------------------------------------------------------------------
 ItemStack::ItemStack(const ItemStack& src)
+    :quantity(src.quantity)
 {
     // 1 . Create a copy (clone) of src.item and reference it with the
     //     this->item pointer.
@@ -30,12 +31,14 @@ ItemStack::ItemStack(const ItemStack& src)
     // 2. Do not forget to copy src.quantity.
     //
 
+    this->item = src.item->clone();
 }
 
 //------------------------------------------------------------------------------
 ItemStack::~ItemStack()
 {
     // Every pointer must be deleted to prevent memory leaks (item is a pointer).
+    delete this->item;
 }
 
 //------------------------------------------------------------------------------
@@ -75,14 +78,22 @@ bool ItemStack::operator==(const ItemStack& rhs) const
 {
     // Compare this and rhs for equivalence based on the ids of this->item and
     // rhs.item.
-    return false; // replace this line
+
+    const int& lhsID = this->item->getID();
+    const int& rhsID = rhs.item->getID();
+
+    return (lhsID == rhsID);
 }
 
 //------------------------------------------------------------------------------
 bool ItemStack::operator<(const ItemStack& rhs) const
 {
     // Order (sort) this and rhs based on the ids of this->item and rhs.item.
-    return false; // replace this line
+
+    const int& lhsID = this->item->getID();
+    const int& rhsID = rhs.item->getID(); 
+
+    return (lhsID < rhsID);
 }
 
 //------------------------------------------------------------------------------
@@ -95,6 +106,8 @@ void ItemStack::display(std::ostream& outs) const
 //------------------------------------------------------------------------------
 void swap(ItemStack& lhs, ItemStack& rhs)
 {
+    using std::swap;
     // Swap the item data members and quantity data members for lhs and rhs.
-
+    swap(lhs.item, rhs.item);
+    swap(lhs.quantity, rhs.quantity);
 }
